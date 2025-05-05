@@ -1,0 +1,6 @@
+apiVersion: v2
+name: karpenter
+description: A Helm chart for deploying Karpenter controller and provisioners
+type: application
+version: 0.1.0
+appVersion: "v0.34.0" # (latest stable Karpenter controller version)

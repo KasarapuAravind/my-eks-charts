@@ -1,0 +1,18 @@
+apiVersion: 
+kind: Pod
+metadata:
+  name: mypod
+  labels:
+    app: frontend
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+        - mountPath: "/data"
+          name: myebsvolume
+      volumes:
+        - name: myebsvolume
+          persistentVolumeClaim:
+            claimName: mypvc
+

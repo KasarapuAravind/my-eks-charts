@@ -1,0 +1,17 @@
+{{- if .Values.provisioners.enabled }}
+apiVersion: karpenter.k8s.aws/v1beta1
+kind: NodePool
+metadata:
+  name: default
+spec:
+  template:
+    metadata:
+      labels:
+        app: karpenter
+    spec:
+      taints: []
+      requirements:
+{{ toYaml .Values.defaultProvisioner.requirements | indent 8 }}
+      nodeClassRef:
+        name: default
+{{- end }}

@@ -1,0 +1,17 @@
+{{- if .Values.provisioners.enabled }}
+apiVersion: karpenter.sh/v1alpha5
+kind: Provisioner
+metadata:
+  name: default
+spec:
+  ttlSecondsAfterEmpty: {{ .Values.defaultProvisioner.ttlSecondsAfterEmpty }}
+  ttlSecondsUntilExpired: {{ .Values.defaultProvisioner.ttlSecondsUntilExpired }}
+  limits:
+    resources:
+      cpu: {{ .Values.defaultProvisioner.limits.resources.cpu }}
+      memory: {{ .Values.defaultProvisioner.limits.resources.memory }}
+  requirements:
+{{ toYaml .Values.defaultProvisioner.requirements | indent 4 }}
+  providerRef:
+    name: default
+{{- end }}
