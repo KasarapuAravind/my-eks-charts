@@ -1,52 +1,17 @@
 controller:
-  replicas: 2
-
+  clusterName: my-dev-eks-cluster
+  clusterEndpoint: https://your-cluster-endpoint
   serviceAccount:
-    create: true
-    name: karpenter-controller
     annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::<YOUR_AWS_ACCOUNT_ID>:role/karpenter-controller-role
-
+      eks.amazonaws.com/role-arn: arn:aws:iam::084375583445:role/my-dev-eks-cluster-karpenter-controller-role
   resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
     limits:
       cpu: 500m
       memory: 512Mi
-    requests:
-      cpu: 250m
-      memory: 256Mi
 
 settings:
   aws:
-    clusterName: dev-eks-cluster
-    defaultInstanceProfile: karpenter-instance-profile
-    interruptionQueueName: karpenter-interruption-queue
-  clusterEndpoint: https://<YOUR_EKS_ENDPOINT>
-
-provisioners:
-  enabled: true
-
-defaultProvisioner:
-  ttlSecondsAfterEmpty: 30
-  ttlSecondsUntilExpired: 2592000 # 30 days
-  limits:
-    resources:
-      cpu: 1000
-      memory: 4000Gi
-  requirements:
-    - key: "karpenter.k8s.aws/instance-category"
-      operator: In
-      values: ["m", "c", "r"]
-    - key: "karpenter.k8s.aws/instance-generation"
-      operator: Gt
-      values: ["2"]
-    - key: "topology.kubernetes.io/zone"
-      operator: In
-      values: ["us-east-1a", "us-east-1b", "us-east-1c"]
-    - key: "kubernetes.io/arch"
-      operator: In
-      values: ["amd64"]
-  provider:
-    subnetSelector:
-      karpenter.sh/discovery: dev-eks-cluster
-    securityGroupSelector:
-      karpenter.sh/discovery: dev-eks-cluster
+    interruptionQueueName: my-dev-eks-cluster-karpenter-interruption-queue

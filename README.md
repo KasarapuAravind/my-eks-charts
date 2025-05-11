@@ -1,2 +1,2 @@
 # my-eks-charts
-Thsi repo is for hem charts to deploy in EKS cluster through ArgoCD
+Thsi repo is for helm charts to deploy in EKS cluster through ArgoCD

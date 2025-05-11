@@ -1,5 +1,4 @@
-{{- if .Values.provisioners.enabled }}
-apiVersion: karpenter.k8s.aws/v1beta1
+apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
   name: default
@@ -7,11 +6,31 @@ spec:
   template:
     metadata:
       labels:
-        app: karpenter
+        intent: default
     spec:
-      taints: []
-      requirements:
-{{ toYaml .Values.defaultProvisioner.requirements | indent 8 }}
       nodeClassRef:
         name: default
-{{- end }}
+        kind: EC2NodeClass
+        group: karpenter.k8s.aws
+      taints:
+        - key: dedicated
+          value: karpenter
+          effect: NoSchedule
+      startupTaints:
+        - key: startup
+          value: pending
+          effect: NoSchedule
+      requirements:
+        - key: "karpenter.sh/capacity-type"
+          operator: In
+          values: ["on-demand"]
+        - key: "node.kubernetes.io/instance-type"
+          operator: In
+          values: ["t3.medium", "t3.large"]
+      expiration:
+        ttlSecondsAfterEmpty: 300
+      terminationGracePeriodSeconds: 30
+  limits:
+    resources:
+      cpu: 20
+      memory: 200Gi
